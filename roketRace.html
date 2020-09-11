@@ -264,25 +264,7 @@
 
                 // ゲーム終了を判定する
                 let gameFinished = true
-                gameManager.racerList.forEach((rocket) => {
-                    // ロケットのうちひとつでもゴールに到達してなければ、gameFinished は false になる
-                    // 全部がゴールしてるときだけ true になる
-                    if (!rocket.isFinished()) {
-                        gameFinished = false
-                    }
-                })
-
-                // 終了した場合の判定
-                if (gameFinished) {
-                    // setIntervalのループ処理を止める
-                    clearInterval(timerId);
-                    
-                    if (gameManager.expect === ChampionRocket) {
-                        result.innerHTML = "当たり！！"
-                    } else {
-                        result.innerHTML = "ハズレ！！"
-                    }
-                }
+                gameFinishedFlg(gameFinished,timerId)
 
                 //racerListオブジェクト再代入
                 gameManager.racerList.length = 0
@@ -294,7 +276,27 @@
 
             }, 100)
         }
+        function gameFinishedFlg(gameFinished,timerId) {
+            gameManager.racerList.forEach((rocket) => {
+                // ロケットのうちひとつでもゴールに到達してなければ、gameFinished は false になる
+                // 全部がゴールしてるときだけ true になる
+                if (!rocket.isFinished()) {
+                    gameFinished = false
+                }
+            })
 
+            // 終了した場合の判定
+            if (gameFinished) {
+                // setIntervalのループ処理を止める
+                clearInterval(timerId);
+                
+                if (gameManager.expect === ChampionRocket) {
+                    result.innerHTML = "当たり！！"
+                } else {
+                    result.innerHTML = "ハズレ！！"
+                }
+            }
+        }
         // 描画関数
         function appendImg(chars) {
 
