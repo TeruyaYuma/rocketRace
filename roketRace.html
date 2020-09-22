@@ -20,6 +20,11 @@
         margin: 0;
     }
 
+    img{
+        width: 100%;
+        height: 100%;
+    }
+
     .bg-image {
         background-image: url("https://co-jin.net/wp-content/uploads/2014/07/we_own_the_sky_by_mediumanalog.jpg");
         background-size: 100% 100%;
@@ -107,10 +112,35 @@
         -ms-writing-mode: tb-rl;
         writing-mode: vertical-rl;
     }
+    .celebrate {
+        position: absolute;
+        top: 300px;
+        z-index: 2;
+        display: flex;
+        width: 130px;
+        align-items: center;
+    }
+    .celebrate__txt {
+        color: white;
+        font-weight: bold;
+    }
+    .celebrate__image {
+        width: 50px;
+        height: 50px;
+        transform: rotate(90deg);
+    }
 </style>
 
 <body>
     <div class="bg-image">
+
+        <div id="celebrate" class="celebrate">
+            <p class="celebrate__txt">オメデト〜</p>
+            <div class="celebrate__image">
+                <img src="https://frame-illust.com/fi/wp-content/uploads/2017/05/rocket-red.png" alt="正解時のロケット">
+            </div>
+        </div>
+
         <form id="expect-list" class="expect-list">
             <p>１着を予想する</p>
             <label for="">1番
@@ -211,13 +241,18 @@
         ////////////////////////
         const btn = document.getElementById('btn');
         const result = document.getElementById('result')
+        const celebrate = document.getElementById('celebrate');
 
+        const celebrateW = celebrate.offsetWidth;
+
+        
         window.addEventListener("DOMContentLoaded", () => {
             const chars = gameManager.racerList;
             // イメージ初期描画
-            appendImg(chars)
+            appendImg(chars);
+            //おめでとうDOM初期配置
+            celebrate.setAttribute("style", "left: -" + celebrateW + "px;");
         })
-
 
         btn.addEventListener("click", () => {
             //バリデーション
@@ -258,6 +293,7 @@
                 // 再代入前のオブジェクト削除
                 clearObj();
                 // ロケットをすすめる
+                
                 gameManager.racerList.forEach((char, index) => {
                     char.move()
                 })
@@ -276,6 +312,7 @@
 
             }, 100)
         }
+
         function gameFinishedFlg(gameFinished,timerId) {
             gameManager.racerList.forEach((rocket) => {
                 // ロケットのうちひとつでもゴールに到達してなければ、gameFinished は false になる
@@ -292,6 +329,8 @@
                 
                 if (gameManager.expect === ChampionRocket) {
                     result.innerHTML = "当たり！！"
+                    // オメデトウDOM移動
+                    celebrate.setAttribute("style", "left: 1500px; transition: 6s ease-in-out;");
                 } else {
                     result.innerHTML = "ハズレ！！"
                 }
@@ -321,8 +360,14 @@
         // 再初期化
         function init() {
             const racer = gameManager.racerList;
+
             ChampionRocket = null
+
             result.innerHTML = ""
+
+            //おめでとうDOM再配置
+            celebrate.setAttribute("style", "left: -" + celebrateW + "px;");
+
             racer.forEach((racer, index) => {
                 racer.positionY = 680
 
@@ -351,14 +396,16 @@
             const chars = gameManager.racerList;
             appendImg(chars)
         }
+
         function clearObj() {
-            var top = document.getElementById('racer');
+            let top = document.getElementById('racer');
 
             // 描画された要素削除・クリア
             while (top.firstChild) {
                 top.removeChild(top.firstChild);
             }
         }
+
         function setRacerGroup() {
             gameManager.addRacer(racer1)
             gameManager.addRacer(racer2)
